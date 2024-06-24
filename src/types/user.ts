@@ -18,6 +18,7 @@ export interface User {
   webhook_url?: string;
   is_bot?: boolean;
   log_id?: number;
+  widget_id?: string;
 }
 export type ContactAction = "add" | "remove" | "block" | "unblock";
 export type ContactStatus = "added" | "blocked" | "";
@@ -70,7 +71,7 @@ export interface UserCreateDTO
   password: string;
 }
 export interface UserRegDTO
-  extends Partial<Pick<User, "name" | "gender" | "language" | "email">>,
+  extends Partial<Pick<User, "name" | "gender" | "language" | "email" | "widget_id">>,
     Partial<Pick<UserDevice, "device" | "device_token">> {
   password?: string;
   magic_token?: string;
