@@ -18,6 +18,11 @@ import Radio from "@/components/styled/Radio";
 import Textarea from "@/components/styled/Textarea";
 import IconChannel from "@/assets/icons/channel.svg";
 import { shallowEqual } from "react-redux";
+import ShowEmail from "./ShowEmail";
+import DMMember from "./DMMember";
+import AddFriend from "./AddFriend";
+import ServerVersionChecker from "@/components/ServerVersionChecker";
+import OnlyOwnerCanSendMsg from "./OnlyOwnerCanSendMsg";
 
 export default function Overview({ id = 0 }) {
   const { t } = useTranslation("setting", { keyPrefix: "channel" });
@@ -84,11 +89,12 @@ export default function Overview({ id = 0 }) {
   }, [changeTypeSuccess]);
 
   if (!values || !id || !channel) return null;
-  const { name, description } = values;
+  const { name, description, show_email, dm_to_member, add_friend, only_owner_can_send_msg } =
+    values;
   const readOnly = !loginUser?.is_admin && channel?.owner != loginUser?.uid;
   const inputClass = `w-full flex flex-col items-start gap-2 relative`;
   return (
-    <div className="relative w-[512px] flex flex-col gap-6 h-full">
+    <div className="relative w-[512px] flex flex-col gap-6 h-full mb-10">
       <AvatarUploader type="channel" url={channel?.icon} name={name} uploadImage={updateIcon} />
       <div className="flex flex-col gap-6 items-start">
         <div className={"flex items-center gap-1"}>
@@ -137,6 +143,16 @@ export default function Overview({ id = 0 }) {
             />
           </div>
         )}
+        <ServerVersionChecker empty version="0.3.50">
+          <>
+            {!readOnly && loginUser.is_admin && (
+              <OnlyOwnerCanSendMsg id={id} only_owner_can_send_msg={only_owner_can_send_msg} />
+            )}
+            {!readOnly && loginUser.is_admin && <ShowEmail id={id} show_email={show_email} />}
+            {!readOnly && loginUser.is_admin && <DMMember id={id} dm_to_member={dm_to_member} />}
+            {!readOnly && loginUser.is_admin && <AddFriend id={id} add_friend={add_friend} />}
+          </>
+        </ServerVersionChecker>
       </div>
       {changed && <SaveTip saveHandler={handleUpdate} resetHandler={handleReset} />}
     </div>
